@@ -1,6 +1,4 @@
 package com.example.ocr;
-
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -17,7 +15,7 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import java.io.IOException;
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
     SurfaceView mCameraView;
     TextView mTextView;
     CameraSource mCameraSource;
@@ -37,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != requestPermissionID) {
-            Log.d(TAG, "Got unexpected permission result: " + requestCode);
+            Log.d(TAG, "Obtuve  un resultado inesperado de permiso: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
@@ -58,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         //Create the TextRecognizer
         final TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
         if (!textRecognizer.isOperational()) {
-            Log.w(TAG, "Detector dependencies not loaded yet");
+            Log.w(TAG, "Dependencias del detector aún no cargadas");
         } else {
             //Initialize camerasource to use high resolution and set Autofocus on.
             mCameraSource = new CameraSource.Builder(getApplicationContext(), textRecognizer)
@@ -68,8 +66,9 @@ public class MainActivity extends AppCompatActivity {
                     .setRequestedFps(2.0f)
                     .build();
             /**
-             * Add call back to SurfaceView and check if camera permission is granted.
-             * If permission is granted we can start our cameraSource and pass it to surfaceView
+             *
+             * Agregue una llamada a SurfaceView y verifique si se otorga el permiso de la cámara.
+             *              * Si se otorga el permiso, podemos iniciar nuestro CameraSource y pasarlo a surfaceView
              */
             mCameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
                 @Override
@@ -101,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
                 public void release() {
                 }
                 /**
-                 * Detect all the text from camera using TextBlock and the values into a stringBuilder
-                 * which will then be set to the textView.
+                 * Detecta todo el texto de la cámara usando TextBlock y los valores en un stringBuilder
+                 * que luego se establecerá en el textView
                  * */
                 @Override
                 public void receiveDetections(Detector.Detections<TextBlock> detections) {
