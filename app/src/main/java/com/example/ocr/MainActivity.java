@@ -97,6 +97,22 @@ public class MainActivity extends AppCompatActivity  {
                 @Override
                 public void release() {
                 }
+                public String filtro(String placa){
+                    int pos=placa.indexOf("-");
+                    String xyz,abc;
+                    if (pos>0){
+                        xyz=placa.substring(0,pos);
+                        abc=placa.substring(pos+1);
+                        int primercaracter=xyz.charAt(0);
+                        if (xyz.length()==3 && abc.length()==3){
+                            if ((primercaracter>=65 && primercaracter<=90) || (primercaracter>=97 && primercaracter<=122)){
+                                return xyz+"-"+abc;
+                            }
+                        }
+
+                    }
+                    return null;
+                }
                 /**
                  * Detecta todo el texto de la cámara usando TextBlock y los valores en un stringBuilder
                  * que luego se establecerá en el textView
@@ -114,7 +130,7 @@ public class MainActivity extends AppCompatActivity  {
                                     stringBuilder.append(item.getValue());
                                     stringBuilder.append("\n");
                                 }
-                                mTextView.setText(stringBuilder.toString());
+                                mTextView.setText(filtro(stringBuilder.toString()));
                             }
                         });
                     }
