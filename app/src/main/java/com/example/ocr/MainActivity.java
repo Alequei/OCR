@@ -20,7 +20,7 @@ import com.google.android.gms.vision.text.TextRecognizer;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
     SurfaceView mCameraView;
     TextView mTextView;
     CameraSource mCameraSource;
@@ -87,9 +87,11 @@ public class MainActivity extends AppCompatActivity  {
                         e.printStackTrace();
                     }
                 }
+
                 @Override
                 public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
                 }
+
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
                     mCameraSource.stop();
@@ -100,40 +102,26 @@ public class MainActivity extends AppCompatActivity  {
                 @Override
                 public void release() {
                 }
-                public String guardar_linea_archivo(String s)
-                {
-                    OutputStreamWriter escritor=null;
-                    try
-                    {
-                        escritor=new OutputStreamWriter(openFileOutput("guardar_linea_archivo.txt", Context.MODE_APPEND));
-                        escritor.write(mTextView.getText().toString());
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.e(TAG, "Error al escribir fichero a memoria interna");
-                    }
 
-                    return null;
-
-                }
 
                 //Me da como resultado  6 digitos de  forma xyz-abc
-                public String filtro(String placa){
-                    int pos=placa.indexOf("-");
-                    String xyz,abc;
-                    if (pos>0){
-                        xyz=placa.substring(pos-3,pos);
-                        abc=placa.substring(pos+1,pos+3+1);
-                        int primercaracter=xyz.charAt(0);
-                        if (xyz.length()==3 && abc.length()==3){
-                            if ((primercaracter>=65 && primercaracter<=90) || (primercaracter>=97 && primercaracter<=122)){
-                                return xyz+"-"+abc;
+                public String filtro(String placa) {
+                    int pos = placa.indexOf("-");
+                    String xyz, abc;
+                    if (pos > 0) {
+                        xyz = placa.substring(pos - 3, pos);
+                        abc = placa.substring(pos + 1, pos + 3 + 1);
+                        int primercaracter = xyz.charAt(0);
+                        if (xyz.length() == 3 && abc.length() == 3) {
+                            if ((primercaracter >= 65 && primercaracter <= 90) || (primercaracter >= 97 && primercaracter <= 122)) {
+                                return xyz + "-" + abc;
                             }
                         }
 
                     }
                     return null;
                 }
+
                 /**
                  * Detecta todo el texto de la cámara usando TextBlock y los valores en un stringBuilder
                  * que luego se establecerá en el textView
@@ -141,17 +129,18 @@ public class MainActivity extends AppCompatActivity  {
                 @Override
                 public void receiveDetections(Detector.Detections<TextBlock> detections) {
                     final SparseArray<TextBlock> items = detections.getDetectedItems();
-                    if (items.size() != 0 ){
+                    if (items.size() != 0) {
                         mTextView.post(new Runnable() {
                             @Override
                             public void run() {
                                 StringBuilder stringBuilder = new StringBuilder();
-                                for(int i=0;i<items.size();i++){
+                                for (int i = 0; i < items.size(); i++) {
                                     TextBlock item = items.valueAt(i);
                                     stringBuilder.append(item.getValue());
                                     stringBuilder.append("\n");
                                 }
-                                mTextView.setText(filtro(guardar_linea_archivo(stringBuilder.toString()+"|")));
+                                String placabuscado = stringBuilder.toString() + "|";
+                                mTextView.setText(filtro(guardar_linea_archivo(placabuscado)));
 
                             }
                         });
@@ -160,4 +149,25 @@ public class MainActivity extends AppCompatActivity  {
             });
         }
     }
+
+    public String guardar_linea_archivo(String s) {
+        OutputStreamWriter escritor=null;
+
+        try {
+            escritor = new OutputStreamWriter(openFileOutput("placas.txt", Context.MODE_APPEND));
+            escritor.write(s);
+        } catch (Exception ex) {
+            Log.e("ivan", "Error al escribir fichero a memoria interna");
+        } finally {
+            try {
+                if (escritor != null)
+                    escritor.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return s;
+    }
+
+
 }
