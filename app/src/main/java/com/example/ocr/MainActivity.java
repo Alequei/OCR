@@ -19,6 +19,9 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     SurfaceView mCameraView;
@@ -128,7 +131,10 @@ public class MainActivity extends AppCompatActivity {
                  * */
                 @Override
                 public void receiveDetections(Detector.Detections<TextBlock> detections) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    Date date = new Date();
                     final SparseArray<TextBlock> items = detections.getDetectedItems();
+                    final String fecha = dateFormat.format(date);
                     if (items.size() != 0) {
                         mTextView.post(new Runnable() {
                             @Override
@@ -140,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                                     stringBuilder.append("\n");
                                 }
                                 String placabuscado = stringBuilder.toString() + "|";
-                                mTextView.setText(filtro(guardar_linea_archivo(placabuscado)));
+                                mTextView.setText(filtro(guardar_linea_archivo(placabuscado+fecha)));
 
                             }
                         });
