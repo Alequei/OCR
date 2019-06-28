@@ -1,5 +1,6 @@
 package com.example.ocr;
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -17,6 +18,8 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+
 public class MainActivity extends AppCompatActivity  {
     SurfaceView mCameraView;
     TextView mTextView;
@@ -97,12 +100,30 @@ public class MainActivity extends AppCompatActivity  {
                 @Override
                 public void release() {
                 }
+                public String guardar_linea_archivo(String s)
+                {
+                    OutputStreamWriter escritor=null;
+                    try
+                    {
+                        escritor=new OutputStreamWriter(openFileOutput("guardar_linea_archivo.txt", Context.MODE_APPEND));
+                        escritor.write(mTextView.getText().toString());
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.e(TAG, "Error al escribir fichero a memoria interna");
+                    }
+
+                    return null;
+
+                }
+
+                //Me da como resultado  6 digitos de  forma xyz-abc
                 public String filtro(String placa){
                     int pos=placa.indexOf("-");
                     String xyz,abc;
                     if (pos>0){
-                        xyz=placa.substring(0,pos);
-                        abc=placa.substring(pos+1);
+                        xyz=placa.substring(pos-3,pos);
+                        abc=placa.substring(pos+1,pos+3+1);
                         int primercaracter=xyz.charAt(0);
                         if (xyz.length()==3 && abc.length()==3){
                             if ((primercaracter>=65 && primercaracter<=90) || (primercaracter>=97 && primercaracter<=122)){
@@ -130,7 +151,8 @@ public class MainActivity extends AppCompatActivity  {
                                     stringBuilder.append(item.getValue());
                                     stringBuilder.append("\n");
                                 }
-                                mTextView.setText(filtro(stringBuilder.toString()));
+                                mTextView.setText(filtro(guardar_linea_archivo(stringBuilder.toString()+"|")));
+
                             }
                         });
                     }
